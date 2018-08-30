@@ -1,0 +1,42 @@
+<div style="line-height:1.7;color:#000000;font-size:14px;font-family:Arial">
+
+<style>
+table,table tr th, table tr td { border:1px solid #0094ff; }
+table { width: auto; min-height: 25px; line-height: 25px;    text-align: center; border-collapse: collapse; padding:2px;} 
+</style>
+
+<table>
+<caption>测试标题</caption>
+<tbody>
+<tr height=17 style='height:12.75pt'>
+<td></td>
+<td>文件</td>
+<td>实际上</td>
+<td>ssj</td>
+<td>搜索</td>
+</tr>
+
+<tr height=17 style='height:12.75pt'>
+<td>11</td>
+<td>122</td>
+<td>233</td>
+<td>333</td>
+<td>44</td>
+</tr>
+<tr height=17 style='height:12.75pt'>
+<td>11</td>
+<td>122</td>
+<td>233</td>
+<td>333</td>
+<td>44</td>
+</tr>
+<tr height=17 style='height:12.75pt'>
+<td>11</td>
+<td>122</td>
+<td>233</td>
+<td>333</td>
+<td>44</td>
+</tr>
+</tbody>
+</table>
+</div>
