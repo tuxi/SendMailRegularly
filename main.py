@@ -10,11 +10,19 @@ from email.header import Header
 from email.mime.text import MIMEText
 from mailcontent import getMailContent
 import datetime #定时发送，以及日期
+import os
 
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = 'xy@swift.top' #os.environ.get('DJANGO_EMAIL_USER')
-EMAIL_HOST_PASSWORD = ''
+
+# 使用文件存放密码的好处是: 可防止每次提交代码时不小心把密码也提交了，这里已在.gitignore中忽略了passwordfile
+passwordfile = "emailpassword.txt"
+if not os.path.exists(passwordfile):
+    # 调用系统命令行来创建文件
+    os.system(r"touch {}".format(passwordfile))
+with open(passwordfile, 'r+') as pf:
+    EMAIL_HOST_PASSWORD = pf.readline()
 
 EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com"]
 EMAIL_CC = ["sey@live.cn"]
@@ -26,7 +34,7 @@ kMin = 1   # index for minute
 kSec = 2    # index for second
 kPeriod1 = 0  #时间段1，这里定义了两个代码执行的时间段
 starttime =   [[0,  50,  0]]     # 一个时间段的起始时间，hour, minute 和 second
-endtime =   [[1, 3,  0]]    # 一个时间段的终止时间
+endtime =   [[1, 30,  0]]    # 一个时间段的终止时间
 sleeptime = 5    # 扫描间隔时间，s
 
 
