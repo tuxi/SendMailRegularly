@@ -8,7 +8,7 @@
 from smtplib import SMTP_SSL
 from email.header import Header
 from email.mime.text import MIMEText
-from mailcontent import getMailContent
+from mailcontent import getMailContent, mail_title
 import datetime #定时发送，以及日期
 import os
 import xlrd
@@ -25,7 +25,11 @@ if not os.path.exists(passwordfile):
 with open(passwordfile, 'r+') as pf:
     EMAIL_HOST_PASSWORD = pf.readline()
 
-EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com"]
+EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com", "yangxy@zorrogps.com"]
+'''
+kongp@zorrogps.com zhangy@zorrogps.com
+emergy@erlinyou.com
+'''
 EMAIL_CC = ["sey@live.cn"]
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
@@ -46,7 +50,7 @@ mail_info = {
     "hostname": EMAIL_HOST,
     "username": EMAIL_HOST_USER,
     "password": EMAIL_HOST_PASSWORD,
-    "mail_subject": "每日任务测试",
+    "mail_subject": mail_title,
     "mail_encoding": "utf-8"
 }
 
