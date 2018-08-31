@@ -11,7 +11,7 @@ from email.mime.text import MIMEText
 from mailcontent import getMailContent, mail_title
 import datetime #定时发送，以及日期
 import os
-import xlrd
+import xlrd # 虽然没有使用，但是也要添加，不然会报错 ImportError: Install xlrd >= 0.9.0 for Excel support
 
 EMAIL_HOST = 'smtp.exmail.qq.com'
 EMAIL_PORT = 465
@@ -39,7 +39,7 @@ kMin = 1   # index for minute
 kSec = 2    # index for second
 kPeriod1 = 0  #时间段1，这里定义了两个代码执行的时间段
 starttime =   [[10,  00,  0]]     # 一个时间段的起始时间，hour, minute 和 second
-endtime =   [[17, 10,  0]]    # 一个时间段的终止时间
+endtime =   [[18, 10,  0]]    # 一个时间段的终止时间
 sleeptime = 5    # 扫描间隔时间，s
 
 
