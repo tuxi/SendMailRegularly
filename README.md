@@ -1,7 +1,7 @@
 # SendMailRegularly
 
 #### 读取excel内容，并以邮件的正文的方式定时发送
-> 谁让老板总以发每日任务报告时间为加班时间呢，说好的弹性上班时间，尽然变成了只弹早上不弹晚上
+> 每天下班定时发送日报，防止忘记了，还能起到其他作用
 
 - 示例: 设置时间段为0点50分-1点3分之间
 ```angular2html
@@ -12,5 +12,20 @@ endtime =   [[1, 3,  0]]    # 一个时间段的终止时间
 - 执行: 
 ```angular2html
 python main.py
+```
+
+### 问题
+- 运行报错: ImportError: Install xlrd >= 0.9.0 for Excel support错误的解决
+```
+在执行pandas读取excel的操作时,出现了问题,代码如下:
+
+data = pd.read_excel(discfile)
+ 
+
+ImportError: Install xlrd >= 0.9.0 for Excel support
+
+解决办法：
+
+需要pip安装xlrd的库,并且在当前代码中import这个xlrd这个库
 ```
 
