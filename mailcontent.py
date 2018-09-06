@@ -8,14 +8,24 @@
 import pandas
 import os
 import codecs
+import datetime
 
 excelpath = 'test_excel.xls' # 需要发送邮件的excel
-mail_title = "xiaoyuan's Aug 31 daily report"
 
 # 将邮件内容转换为html时，contentpath作为log日志记录
 log_path = 'content.html'
 if os.path.exists(log_path):
     os.system(r'touch {}'.format(log_path))
+
+month_list = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']
+
+def mailTitle():
+    month = datetime.datetime.now().month
+    day = datetime.datetime.now().day
+    month = month_list[month-1]
+    mail_title = "xiaoyuan's {month} {day} daily report".format(month=month, day=day)
+    return mail_title
+
 
 def custonHtmlContent(title='邮件标题'):
     '''
@@ -26,9 +36,16 @@ def custonHtmlContent(title='邮件标题'):
     '''
     # 读取excelpath表中的Sheet1表单
     df = pandas.read_excel(excelpath, sheetname='Sheet1')
+    # 给Nan填充为空字符串 要不然邮件中表格如果为空就会显示nan，
+    # note 执行fillna后，日期莫名就从2018-10-11 变成 2018-10-11 00:00:00
+    df = df.fillna('')
 
-    # 给Nan填充为空字符串 要不然邮件中表格如果为空就会显示nan
-    df = df.fillna(' ')
+
+    # 去掉日期中的时间只保留年月日
+    # df['Date'] = pandas.to_datetime(df['Date']).dt.normalize()
+    # 去掉日期中的时间只保留年月日
+    # df['Date'] = pandas.to_datetime(df['Date'], format='%Y-%m-%d')#%Y是4位年（2018），%y是2位年(18)
+
 
     columns = list(df.columns)
     index = list(df.index)
@@ -59,7 +76,16 @@ def custonHtmlContent(title='邮件标题'):
         row = str(index[i])
         rowstr = "<tr height=17 style='height:12.75pt'>\n" + "<td>" + row + "</td>\n"
         for j in range(0, len(columns)):
-            content2 = str(df.iat[i, j])
+            column = columns[j]
+            if column == 'Date':
+
+                # 处理Date列的日期格式，将2018-10-11 00:00:00 修改为 2018-10-11
+                content2 = str(df.iat[i, j])
+                content2 = fromatDateString(content2)
+
+            else:
+                content2 = str(df.iat[i, j])
+
             rowstr += "<td>" + content2 + "</td>\n"
         rowstr += "</tr>\n"
         f.write(rowstr)
@@ -73,6 +99,23 @@ def custonHtmlContent(title='邮件标题'):
 
     return content
 
+def fromatDateString(dateStr):
+    newStr = ''
+    if len(dateStr):
+        d = stringToDate(dateStr)
+        newStr = dateToString(d)
+    return newStr
+
+#String to Date(datetime)
+def stringToDate(string):
+    #example '2013-07-22 09:44:15+00:00'
+    dt = datetime.datetime.strptime(string, "%Y-%m-%d %H:%M:%S")
+    #print dt
+    return dt
+#Date(datetime) to String
+def dateToString(date):
+    ds = date.strftime('%Y-%m-%d')
+    return ds
 
 def getHtmlContent(excelPath):
     '''
@@ -95,7 +138,7 @@ def getHtmlContent(excelPath):
 
 def getMailContent():
 
-    mail_content = custonHtmlContent(title=mail_title)
+    mail_content = custonHtmlContent(title=mailTitle())
     # 使用pd生成的html，文本过长则会显示不全
     # mail_content = getHtmlContent(excelpath)
     return mail_content

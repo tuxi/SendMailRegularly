@@ -8,14 +8,15 @@
 from smtplib import SMTP_SSL
 from email.header import Header
 from email.mime.text import MIMEText
-from mailcontent import getMailContent, mail_title
+from mailcontent import getMailContent, mailTitle
 import datetime #定时发送，以及日期
 import os
 import xlrd # 虽然没有使用，但是也要添加，不然会报错 ImportError: Install xlrd >= 0.9.0 for Excel support
+import random
 
-EMAIL_HOST = 'smtp.exmail.qq.com'
+EMAIL_HOST = 'smtp.mxhichina.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'xy@swift.top' #os.environ.get('DJANGO_EMAIL_USER')
+EMAIL_HOST_USER = 'yangxy@zorrogps.com' #os.environ.get('DJANGO_EMAIL_USER')
 
 # 使用文件存放密码的好处是: 可防止每次提交代码时不小心把密码也提交了，这里已在.gitignore中忽略了passwordfile
 passwordfile = "emailpassword.txt"
@@ -25,7 +26,7 @@ if not os.path.exists(passwordfile):
 with open(passwordfile, 'r+') as pf:
     EMAIL_HOST_PASSWORD = pf.readline()
 
-EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com", "yangxy@zorrogps.com"]
+EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com", "392237716@qq.com"]
 '''
 kongp@zorrogps.com zhangy@zorrogps.com
 emergy@erlinyou.com
@@ -39,7 +40,7 @@ kMin = 1   # index for minute
 kSec = 2    # index for second
 kPeriod1 = 0  #时间段1，这里定义了两个代码执行的时间段
 starttime =   [[10,  00,  0]]     # 一个时间段的起始时间，hour, minute 和 second
-endtime =   [[18, 10,  0]]    # 一个时间段的终止时间
+endtime =   [[20, 10,  0]]    # 一个时间段的终止时间
 sleeptime = 5    # 扫描间隔时间，s
 
 
@@ -50,7 +51,7 @@ mail_info = {
     "hostname": EMAIL_HOST,
     "username": EMAIL_HOST_USER,
     "password": EMAIL_HOST_PASSWORD,
-    "mail_subject": mail_title,
+    "mail_subject": mailTitle(),
     "mail_encoding": "utf-8"
 }
 
@@ -88,20 +89,47 @@ def T1LaterThanT2(time1,time2):   # 根据给定时分秒的两个时间，比�
     else:
         return True
 
+def random_datetime(start_datetime, end_datetime):
+    delta = end_datetime - start_datetime
+    inc = random.randrange(delta.total_seconds())
+    return start_datetime + datetime.timedelta(seconds=inc)
+
+def getRunDateTime():
+    mytime = datetime.datetime.now()
+    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=19, minute=35, second=0)
+    # datetime.datetime(2016, 8, 17, 10, 0, 0)
+    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=19, minute=38, second=2)
+    #datetime.datetime(2016, 8, 17, 18, 0, 0)
+    dt = random_datetime(start_datetime, end_datetime)
+    print(dt)
+    return dt
+
+# def isCanRunNow():
+#     '''
+#     判断当前时间是否可以发送邮件
+#     :return:
+#     '''
+#     mytime = datetime.datetime.now()
+#     currtime = [mytime.hour, mytime.minute, mytime.second]
+#     if (T1LaterThanT2(currtime, starttime[kPeriod1]) and (not T1LaterThanT2(currtime, endtime[kPeriod1]))):
+#         return True
+#     else:
+#         return False
+
 def isCanRunNow():
     '''
     判断当前时间是否可以发送邮件
     :return:
     '''
-    mytime = datetime.datetime.now()
-    currtime = [mytime.hour, mytime.minute, mytime.second]
-    if (T1LaterThanT2(currtime, starttime[kPeriod1]) and (not T1LaterThanT2(currtime, endtime[kPeriod1]))):
+    mytime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    runDateTime = getRunDateTime()
+    if str(mytime) == str(runDateTime):
         return True
     else:
         return False
 
-if __name__=='__main__':
 
+if __name__=='__main__':
 
     if len(starttime) != len(endtime):
         raise Exception('# Error: the run time format is not correct!')
