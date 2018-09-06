@@ -26,7 +26,7 @@ if not os.path.exists(passwordfile):
 with open(passwordfile, 'r+') as pf:
     EMAIL_HOST_PASSWORD = pf.readline()
 
-EMAIL_TO = ["wangshuai@swift.top", "coderhong@126.com", "392237716@qq.com"]
+EMAIL_TO = ["kongp@zorrogps.com", "zhangy@zorrogps.com", "emergy@erlinyou.com"]
 '''
 kongp@zorrogps.com zhangy@zorrogps.com
 emergy@erlinyou.com
@@ -96,9 +96,9 @@ def random_datetime(start_datetime, end_datetime):
 
 def getRunDateTime():
     mytime = datetime.datetime.now()
-    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=19, minute=35, second=0)
+    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=20, minute=5, second=0)
     # datetime.datetime(2016, 8, 17, 10, 0, 0)
-    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=19, minute=38, second=2)
+    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=20, minute=38, second=2)
     #datetime.datetime(2016, 8, 17, 18, 0, 0)
     dt = random_datetime(start_datetime, end_datetime)
     print(dt)
@@ -116,13 +116,12 @@ def getRunDateTime():
 #     else:
 #         return False
 
-def isCanRunNow():
+def isCanRunNow(runDateTime):
     '''
     判断当前时间是否可以发送邮件
     :return:
     '''
     mytime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    runDateTime = getRunDateTime()
     if str(mytime) == str(runDateTime):
         return True
     else:
@@ -131,11 +130,13 @@ def isCanRunNow():
 
 if __name__=='__main__':
 
+    runDateTime = getRunDateTime()
+    print('发送时间{}'.format(str(runDateTime)))
     if len(starttime) != len(endtime):
         raise Exception('# Error: the run time format is not correct!')
     else:
         while True:
-            if isCanRunNow():
+            if isCanRunNow(runDateTime):
                 sendExcelEmail(getMailContent())
                 break
 
