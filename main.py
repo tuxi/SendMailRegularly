@@ -26,7 +26,7 @@ if not os.path.exists(passwordfile):
 with open(passwordfile, 'r+') as pf:
     EMAIL_HOST_PASSWORD = pf.readline()
 
-EMAIL_TO = ["kongp@zorrogps.com", "zhangy@zorrogps.com", "emergy@erlinyou.com"]
+EMAIL_TO = ["392237716@qq.com", "xy@swift.top", "gcloud@dingtalk.com"]
 '''
 kongp@zorrogps.com zhangy@zorrogps.com
 emergy@erlinyou.com
@@ -39,8 +39,8 @@ kHr = 0      # index for hour
 kMin = 1   # index for minute
 kSec = 2    # index for second
 kPeriod1 = 0  #时间段1，这里定义了两个代码执行的时间段
-starttime =   [[10,  00,  0]]     # 一个时间段的起始时间，hour, minute 和 second
-endtime =   [[20, 10,  0]]    # 一个时间段的终止时间
+starttime =   [21,  35,  0]
+endtime =   [21, 40,  0]
 sleeptime = 5    # 扫描间隔时间，s
 
 
@@ -75,19 +75,9 @@ def sendExcelEmail(csvcontent):
 
         smtp.quit()
     except Exception as e:
-        print(e.__str__())
+        raise e
 
 
-def T1LaterThanT2(time1,time2):   # 根据给定时分秒的两个时间，比较其先后关系
-    # t1 < t2, false, t1 >= t2, true
-    if len(time1) != 3 or len(time2) != 3:
-         raise Exception('# Error: time format error!')
-    T1 = time1[kHr]*3600 + time1[kMin]*60 + time1[kSec] # s
-    T2 = time2[kHr]*3600 + time2[kMin]*60 + time2[kSec] # s
-    if T1 < T2:
-        return False
-    else:
-        return True
 
 def random_datetime(start_datetime, end_datetime):
     delta = end_datetime - start_datetime
@@ -96,33 +86,23 @@ def random_datetime(start_datetime, end_datetime):
 
 def getRunDateTime():
     mytime = datetime.datetime.now()
-    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=20, minute=5, second=0)
-    # datetime.datetime(2016, 8, 17, 10, 0, 0)
-    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=20, minute=38, second=2)
-    #datetime.datetime(2016, 8, 17, 18, 0, 0)
+    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=starttime[0], minute=starttime[1], second=starttime[2])
+    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=endtime[0], minute=endtime[1], second=endtime[2])
     dt = random_datetime(start_datetime, end_datetime)
     print(dt)
     return dt
 
-# def isCanRunNow():
-#     '''
-#     判断当前时间是否可以发送邮件
-#     :return:
-#     '''
-#     mytime = datetime.datetime.now()
-#     currtime = [mytime.hour, mytime.minute, mytime.second]
-#     if (T1LaterThanT2(currtime, starttime[kPeriod1]) and (not T1LaterThanT2(currtime, endtime[kPeriod1]))):
-#         return True
-#     else:
-#         return False
 
-def isCanRunNow(runDateTime):
+def isCanRunNow(runDate):
     '''
     判断当前时间是否可以发送邮件
     :return:
     '''
-    mytime = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    if str(mytime) == str(runDateTime):
+    currentDate = datetime.datetime.now()
+    # 计算两个时间间隔的秒数
+    second = (runDate-currentDate).seconds
+    # 正常情况下时间到了runDate就要发送邮件，可有时候会有误差，这里允许误差5秒
+    if second <= 5:
         return True
     else:
         return False
@@ -137,7 +117,10 @@ if __name__=='__main__':
     else:
         while True:
             if isCanRunNow(runDateTime):
-                sendExcelEmail(getMailContent())
+                try:
+                    sendExcelEmail(getMailContent())
+                except Exception as e:
+                    print(e.__str__())
                 break
 
         print('任务结束')
