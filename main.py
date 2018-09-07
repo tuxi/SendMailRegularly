@@ -35,13 +35,8 @@ EMAIL_CC = ["sey@live.cn"]
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 
-kHr = 0      # index for hour
-kMin = 1   # index for minute
-kSec = 2    # index for second
-kPeriod1 = 0  #时间段1，这里定义了两个代码执行的时间段
-starttime =   [21,  35,  0]
-endtime =   [21, 40,  0]
-sleeptime = 5    # 扫描间隔时间，s
+starttime =   [12,  55,  0]
+endtime =   [16, 55,  0]
 
 
 mail_info = {
@@ -79,17 +74,34 @@ def sendExcelEmail(csvcontent):
 
 
 
-def random_datetime(start_datetime, end_datetime):
-    delta = end_datetime - start_datetime
-    inc = random.randrange(delta.total_seconds())
-    return start_datetime + datetime.timedelta(seconds=inc)
+def random_datetime(start_date, end_date):
+    delta = end_date - start_date
+    if delta.days < 0:
+        raise Exception('時間範圍錯誤: 結束時間不能小於起始時間')
+    seconds = delta.total_seconds()
+    inc = random.randrange(seconds)
+    return start_date + datetime.timedelta(seconds=inc)
 
 def getRunDateTime():
-    mytime = datetime.datetime.now()
-    start_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=starttime[0], minute=starttime[1], second=starttime[2])
-    end_datetime = datetime.datetime(year=mytime.year, month=mytime.month, day=mytime.day, hour=endtime[0], minute=endtime[1], second=endtime[2])
-    dt = random_datetime(start_datetime, end_datetime)
-    print(dt)
+    '''
+    在设定的两个时间范围内，随机获取一个时间，此时间作为发送邮件的时间
+    :note:当起始时间小于当前时间并且结束时间还未到达时，起始时间为当前时间+20秒后的时间
+    :return:
+    '''
+    currentDate_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    currentDate = datetime.datetime.strptime(currentDate_str, "%Y-%m-%d %H:%M:%S")
+    start_date = datetime.datetime(year=currentDate.year, month=currentDate.month, day=currentDate.day, hour=starttime[0], minute=starttime[1], second=starttime[2])
+    end_date = datetime.datetime(year=currentDate.year, month=currentDate.month, day=currentDate.day, hour=endtime[0], minute=endtime[1], second=endtime[2])
+    # 如果start_date小于当前时间，并且结束时间还未到达时，则start_date=currentDate
+    # 格式化這兩個date，比較其字符串大小
+    start_date_str = start_date.strftime('%Y-%m-%d %H:%M:%S')
+    end_date_str = end_date.strftime('%Y-%m-%d %H:%M:%S')
+    if start_date_str < currentDate_str and end_date_str > currentDate_str:
+        start_date = currentDate + datetime.timedelta(seconds=20)
+    dt = random_datetime(start_date, end_date)
+    seconds = (dt - currentDate).seconds
+    if seconds <= 0:
+        return currentDate
     return dt
 
 
