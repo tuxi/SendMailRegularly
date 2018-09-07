@@ -36,7 +36,7 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 SERVER_EMAIL = EMAIL_HOST_USER
 
 starttime =   [12,  55,  0]
-endtime =   [16, 55,  0]
+endtime =   [17, 11,  0]
 
 
 mail_info = {
@@ -88,7 +88,7 @@ def getRunDateTime():
     :note:当起始时间小于当前时间并且结束时间还未到达时，起始时间为当前时间+20秒后的时间
     :return:
     '''
-    currentDate_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    currentDate_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S') # 对now()进行格式化，保持与start_date和end_date格式一致，防止不必要的crash
     currentDate = datetime.datetime.strptime(currentDate_str, "%Y-%m-%d %H:%M:%S")
     start_date = datetime.datetime(year=currentDate.year, month=currentDate.month, day=currentDate.day, hour=starttime[0], minute=starttime[1], second=starttime[2])
     end_date = datetime.datetime(year=currentDate.year, month=currentDate.month, day=currentDate.day, hour=endtime[0], minute=endtime[1], second=endtime[2])

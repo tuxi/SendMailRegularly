@@ -35,7 +35,8 @@ def custonHtmlContent(title='邮件标题'):
     :return:
     '''
     # 读取excelpath表中的Sheet1表单
-    df = pandas.read_excel(excelpath, sheetname='Sheet1')
+    df = pandas.read_excel(excelpath, sheetname='Sheet1')#index_col='Date' 可设置索引列为Date列，但是没有列的名称了郁闷
+   # df.set_index(['Date', 'Task', 'Memo'], inplace=True, drop=False) # 设置索引列
     # 给Nan填充为空字符串 要不然邮件中表格如果为空就会显示nan，
     # note 执行fillna后，日期莫名就从2018-10-11 变成 2018-10-11 00:00:00
     df = df.fillna('')
