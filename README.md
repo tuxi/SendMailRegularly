@@ -1,12 +1,13 @@
 # SendMailRegularly
 
 #### 读取excel内容，并以邮件的正文的方式定时发送
-> 每天下班定时发送日报，防止忘记了，还能起到其他作用
+> 每天下班定时发送日报，防止忘记了
 
-- 示例: 设置时间段为0点50分-1点3分之间
+- 示例: 
+设置时间段为16点50分-18点30分之间，会随机取出一个区间的时间值，作为发送时间
 ```angular2html
-starttime =   [[0,  50,  0]]     # 一个时间段的起始时间，hour, minute 和 second
-endtime =   [[1, 3,  0]]    # 一个时间段的终止时间
+starttime =   [16,  50,  0]     # 起始时间，hour, minute 和 second
+endtime =   [18, 30,  0]    # 终止时间, hour, minute 和 second
 ```
 
 - 执行: 
